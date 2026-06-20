@@ -1,44 +1,99 @@
-# MarketSim — symulator giełdy i inwestowania
+# 📈 MarketSim – Symulator Inwestowania i Analizy Portfela
 
-MarketSim to konsolowa aplikacja napisana w języku Python. Program symuluje inwestowanie w akcje oraz waluty. Użytkownik otrzymuje wirtualny portfel z gotówką, może kupować i sprzedawać akcje, kupować waluty po kursie pobieranym z API NBP, analizować historię transakcji oraz zapisywać stan portfela do pliku JSON.
+## Autorzy
 
-Projekt został przygotowany jako zaliczeniowy projekt zespołowy z przedmiotu **Programowanie w języku Python**.
+Projekt wykonany w ramach przedmiotu **Programowanie w języku Python**.
+
+## Opis projektu
+
+MarketSim jest aplikacją konsolową napisaną w języku Python, której celem jest symulacja działania rynku inwestycyjnego. Użytkownik otrzymuje wirtualny kapitał początkowy i może inwestować go w akcje wybranych spółek oraz waluty zagraniczne.
+
+Projekt został stworzony w celu praktycznego wykorzystania zagadnień omawianych podczas zajęć, takich jak:
+
+* funkcje i wartości zwracane,
+* moduły i importy,
+* struktury danych (listy, słowniki, krotki),
+* obsługa wyjątków,
+* type hints i docstringi,
+* moduły `collections`, `itertools` i `functools`,
+* testowanie aplikacji przy użyciu `pytest`,
+* komunikacja z zewnętrznym API.
+
+Dodatkowo aplikacja wykorzystuje publiczne API Narodowego Banku Polskiego do pobierania aktualnych kursów walut.
 
 ---
 
 ## Funkcjonalności
 
-- wyświetlanie listy spółek,
-- losowa aktualizacja kursów akcji,
-- kupowanie akcji,
-- sprzedawanie akcji,
-- kupowanie walut po kursie pobranym z API NBP,
-- obliczanie wartości portfela,
-- historia transakcji,
-- analiza najczęściej handlowanych aktywów,
-- grupowanie transakcji według typu,
-- generowanie par spółek do porównania,
-- prosta prognoza ceny z użyciem `lru_cache`,
-- zapis portfela do pliku JSON,
-- odczyt portfela z pliku JSON,
-- testy jednostkowe.
+### Obsługa akcji
+
+* przegląd dostępnych spółek,
+* kupowanie akcji,
+* sprzedawanie akcji,
+* aktualizacja kursów akcji,
+* prognozowanie przyszłych cen.
+
+### Obsługa walut
+
+* pobieranie aktualnych kursów walut z API NBP,
+* zakup walut po aktualnym kursie,
+* sprzedaż walut po aktualnym kursie,
+* przechowywanie walut w portfelu.
+
+### Portfel inwestora
+
+* przechowywanie gotówki,
+* przechowywanie akcji,
+* przechowywanie walut,
+* historia wszystkich operacji,
+* obliczanie całkowitej wartości portfela.
+
+### Analiza danych
+
+* analiza najczęściej handlowanych aktywów (`Counter`),
+* grupowanie transakcji według typu (`defaultdict`),
+* generowanie wszystkich par spółek (`itertools.combinations`),
+* prognozowanie cen z wykorzystaniem pamięci podręcznej (`lru_cache`).
+
+### Zapis danych
+
+* zapis portfela do pliku JSON,
+* odczyt portfela z pliku JSON.
+
+### Testy
+
+Projekt zawiera zestaw testów jednostkowych sprawdzających:
+
+* kupno akcji,
+* sprzedaż akcji,
+* kupno walut,
+* sprzedaż walut,
+* obliczanie wartości portfela,
+* działanie modułów analitycznych,
+* obsługę API NBP.
 
 ---
 
-## Integracja z API
+## Wykorzystane biblioteki
 
-Projekt korzysta z publicznego API Narodowego Banku Polskiego:
+### Biblioteki standardowe
 
-```text
-https://api.nbp.pl/api/exchangerates/rates/A/EUR/?format=json
-```
+* json
+* random
+* pathlib
+* collections
+* itertools
+* functools
 
-API służy do pobierania aktualnych średnich kursów walut, np. EUR, USD, GBP.
+### Biblioteki zewnętrzne
 
-W projekcie odpowiada za to plik:
+* requests
+* pytest
 
-```text
-app/nbp_api.py
+Instalacja zależności:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
@@ -49,165 +104,99 @@ app/nbp_api.py
 marketsim/
 │
 ├── main.py
-├── README.md
 ├── requirements.txt
+├── README.md
 │
 ├── app/
-│   ├── __init__.py
-│   ├── analysis.py
 │   ├── market.py
-│   ├── menu.py
-│   ├── nbp_api.py
 │   ├── portfolio.py
-│   └── storage.py
+│   ├── nbp_api.py
+│   ├── analysis.py
+│   ├── storage.py
+│   └── menu.py
 │
 └── tests/
-    ├── test_analysis.py
     ├── test_market.py
-    ├── test_nbp_api.py
-    └── test_portfolio.py
+    ├── test_portfolio.py
+    ├── test_analysis.py
+    └── test_nbp_api.py
 ```
 
 ---
 
 ## Uruchomienie projektu
 
-### 1. Pobranie repozytorium
-
-```bash
-git clone ADRES_REPOZYTORIUM
-cd marketsim
-```
-
-### 2. Utworzenie środowiska wirtualnego
-
-Windows:
+Utworzenie środowiska:
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate
 ```
 
-Linux/macOS:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### 3. Instalacja zależności
+Instalacja bibliotek:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Uruchomienie programu
+Uruchomienie programu:
 
 ```bash
 python main.py
 ```
 
----
-
-## Uruchomienie testów
+Uruchomienie testów:
 
 ```bash
 pytest
 ```
 
-Testy znajdują się w katalogu `tests/`.
+---
+
+## Integracja z API NBP
+
+Projekt korzysta z publicznego API Narodowego Banku Polskiego:
+
+https://api.nbp.pl
+
+Przykładowe pobieranie kursu waluty:
+
+```text
+https://api.nbp.pl/api/exchangerates/rates/a/usd/?format=json
+```
+
+Na podstawie otrzymanych danych aplikacja umożliwia zakup oraz sprzedaż walut po aktualnych kursach.
 
 ---
 
-## Wykorzystane elementy języka Python
+## Przykładowe zagadnienia wykorzystane z zajęć
 
-W projekcie wykorzystano zagadnienia omawiane na zajęciach:
-
-- funkcje i wartości zwracane,
-- parametry domyślne,
-- `*args`,
-- `**kwargs`,
-- słowniki i listy,
-- `Counter`,
-- `defaultdict`,
-- `itertools.combinations`,
-- `functools.lru_cache`,
-- domknięcie i `nonlocal`,
-- type hints,
-- docstringi,
-- obsługę wyjątków,
-- importy modułów,
-- zapis i odczyt JSON,
-- testy jednostkowe z `pytest`,
-- mockowanie API w testach.
+| Zagadnienie | Zastosowanie            |
+| ----------- | ----------------------- |
+| Funkcje     | logika programu         |
+| Importy     | podział na moduły       |
+| Type Hints  | dokumentacja kodu       |
+| Docstringi  | opis funkcji            |
+| Counter     | analiza transakcji      |
+| defaultdict | grupowanie danych       |
+| itertools   | generowanie par spółek  |
+| lru_cache   | prognozowanie cen       |
+| JSON        | zapis i odczyt portfela |
+| API         | kursy walut NBP         |
+| pytest      | testy jednostkowe       |
 
 ---
 
-## Podział pracy dla 4 osób
+## Możliwe kierunki rozwoju
 
-### Osoba 1 — Rynek akcji
-
-Plik: `app/market.py`
-
-Zakres:
-
-- lista spółek,
-- pobieranie danych spółki,
-- aktualizacja cen akcji,
-- generowanie par spółek,
-- prognoza ceny z cache.
-
-### Osoba 2 — Portfel inwestora
-
-Plik: `app/portfolio.py`
-
-Zakres:
-
-- tworzenie portfela,
-- kupowanie akcji,
-- sprzedawanie akcji,
-- kupowanie walut,
-- liczenie wartości portfela,
-- historia operacji.
-
-### Osoba 3 — API i zapis danych
-
-Pliki: `app/nbp_api.py`, `app/storage.py`
-
-Zakres:
-
-- pobieranie kursów walut z API NBP,
-- obsługa błędów API,
-- zapis portfela do JSON,
-- odczyt portfela z JSON.
-
-### Osoba 4 — Analiza, menu i testy
-
-Pliki: `app/analysis.py`, `app/menu.py`, `tests/`
-
-Zakres:
-
-- analiza historii transakcji,
-- najczęściej handlowane aktywa,
-- grupowanie transakcji,
-- menu konsolowe,
-- testy jednostkowe.
+* logowanie wielu użytkowników,
+* prowizje maklerskie,
+* wykresy zmian kursów,
+* baza danych SQLite,
+* interfejs graficzny (Tkinter lub PyQt),
+* integracja z rzeczywistymi notowaniami giełdowymi.
 
 ---
 
-## Przykładowy scenariusz użycia
+## Cel projektu
 
-1. Użytkownik uruchamia program.
-2. Wybiera opcję pokazania dostępnych spółek.
-3. Kupuje akcje wybranej spółki, np. CDR.
-4. Aktualizuje kursy akcji.
-5. Kupuje walutę EUR po kursie z API NBP.
-6. Sprawdza wartość portfela.
-7. Ogląda historię transakcji.
-8. Zapisuje portfel do pliku JSON.
-
----
-
-## Autorzy
-
-Projekt wykonany przez zespół 4-osobowy w ramach zajęć z programowania w języku Python.
+Głównym celem projektu było stworzenie modularnej aplikacji konsolowej wykorzystującej najważniejsze elementy języka Python poznane podczas zajęć oraz zaprezentowanie praktycznego wykorzystania zewnętrznych API, testów jednostkowych i analizy danych.
