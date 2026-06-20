@@ -24,32 +24,55 @@ def get_currency_rate(code: str) -> float:
 
     Returns:
         Aktualny kurs średni waluty w PLN.
-
-    Raises:
-        NBPApiError: Gdy API nie odpowiada albo zwraca niepoprawne dane.
     """
-    code = code.upper()
-    url = f"{API_BASE_URL}/rates/A/{code}/?format=json"
+    code = code.strip().upper()
+
+    if len(code) != 3:
+        raise NBPApiError("Kod waluty musi mieć 3 znaki, np. EUR albo USD")
+
+    url = f"{API_BASE_URL}/rates/a/{code}/?format=json"
 
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(
+            url,
+            timeout=10,
+            headers={"Accept": "application/json"},
+        )
+
+        if response.status_code == 404:
+            raise NBPApiError(f"Nie znaleziono kursu waluty {code}")
+
         response.raise_for_status()
         data: dict[str, Any] = response.json()
+
         return float(data["rates"][0]["mid"])
-    except (requests.RequestException, KeyError, IndexError, ValueError) as error:
-        raise NBPApiError(f"Nie udało się pobrać kursu waluty {code}") from error
+
+    except requests.RequestException as error:
+        raise NBPApiError(f"Błąd połączenia z API NBP dla waluty {code}") from error
+    except (KeyError, IndexError, ValueError, TypeError) as error:
+        raise NBPApiError(f"Niepoprawna odpowiedź API NBP dla waluty {code}") from error
 
 
 def get_many_currency_rates(*codes: str) -> dict[str, float]:
-    """Pobiera kursy wielu walut.
+    """Pobiera kursy wielu walut z API NBP.
 
     Args:
-        *codes: Dowolna liczba kodów walut.
+        *codes: Dowolna liczba kodów walut, np. EUR, USD, GBP.
 
     Returns:
-        Słownik w formacie kod waluty -> kurs w PLN.
+        Słownik w formacie kod waluty -> kurs PLN.
     """
     rates: dict[str, float] = {}
+
     for code in codes:
-        rates[code.upper()] = get_currency_rate(code)
+        code = code.strip().upper()
+        rates[code] = get_currency_rate(code)
+
     return rates
+
+
+def print_api_test() -> None:
+    """Pomocniczo pokazuje, że API faktycznie działa."""
+    for code in ["EUR", "USD", "GBP", "CHF"]:
+        rate = get_currency_rate(code)
+        print(f"{code}: {rate:.4f} PLN")
