@@ -6,6 +6,7 @@ from app.nbp_api import NBPApiError, get_currency_rate
 
 
 def test_get_currency_rate_success():
+    """Sprawdza poprawne pobranie kursu waluty z odpowiedzi API."""
     get_currency_rate.cache_clear()
 
     fake_response = Mock()
@@ -29,6 +30,7 @@ def test_get_currency_rate_success():
 
 
 def test_get_currency_rate_404():
+    """Sprawdza, czy dla odpowiedzi HTTP 404 zgłaszany jest wyjątek NBPApiError."""
     get_currency_rate.cache_clear()
 
     fake_response = Mock()
@@ -40,6 +42,7 @@ def test_get_currency_rate_404():
 
 
 def test_get_currency_rate_wrong_code():
+    """Sprawdza obsługę niepoprawnego kodu waluty."""
     get_currency_rate.cache_clear()
 
     with pytest.raises(NBPApiError):

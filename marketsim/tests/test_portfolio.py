@@ -10,6 +10,7 @@ from app.portfolio import (
 
 
 def test_buy_stock_success():
+    """Sprawdza poprawne kupowanie akcji i aktualizację portfela."""
     stocks = copy_default_stocks()
     portfolio = create_portfolio(1000)
 
@@ -22,6 +23,7 @@ def test_buy_stock_success():
 
 
 def test_buy_stock_not_enough_cash():
+    """Sprawdza reakcję programu przy zbyt małej ilości gotówki."""
     stocks = copy_default_stocks()
     portfolio = create_portfolio(10)
 
@@ -31,6 +33,7 @@ def test_buy_stock_not_enough_cash():
 
 
 def test_sell_stock_success():
+    """Sprawdza poprawną sprzedaż posiadanych akcji."""
     stocks = copy_default_stocks()
     portfolio = create_portfolio(1000)
 
@@ -43,6 +46,7 @@ def test_sell_stock_success():
 
 
 def test_sell_stock_without_stock():
+    """Sprawdza próbę sprzedaży akcji, których użytkownik nie posiada."""
     stocks = copy_default_stocks()
     portfolio = create_portfolio(1000)
 
@@ -52,6 +56,7 @@ def test_sell_stock_without_stock():
 
 
 def test_calculate_total_value_with_stocks():
+    """Sprawdza obliczanie wartości portfela zawierającego akcje."""
     stocks = copy_default_stocks()
     portfolio = create_portfolio(1000)
 
@@ -63,6 +68,7 @@ def test_calculate_total_value_with_stocks():
 
 
 def test_buy_currency_success():
+    """Sprawdza poprawny zakup waluty i aktualizację portfela."""
     portfolio = create_portfolio(start_cash=1000)
 
     result = buy_currency(portfolio, "EUR", 100, 4.5)
@@ -74,6 +80,7 @@ def test_buy_currency_success():
 
 
 def test_sell_currency_success():
+    """Sprawdza poprawną sprzedaż posiadanej waluty."""
     portfolio = create_portfolio(start_cash=1000)
 
     buy_currency(portfolio, "EUR", 100, 4.5)
@@ -86,6 +93,7 @@ def test_sell_currency_success():
 
 
 def test_sell_currency_not_enough_currency():
+    """Sprawdza próbę sprzedaży większej ilości waluty niż użytkownik posiada."""
     portfolio = create_portfolio(start_cash=1000)
 
     result = sell_currency(portfolio, "EUR", 10, 4.5)
@@ -94,6 +102,7 @@ def test_sell_currency_not_enough_currency():
 
 
 def test_calculate_total_value_with_currency():
+    """Sprawdza obliczanie wartości portfela zawierającego akcje i waluty."""
     stocks = copy_default_stocks()
     portfolio = create_portfolio(1000)
 
